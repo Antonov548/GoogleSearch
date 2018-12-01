@@ -8,14 +8,10 @@ TrayIcon::TrayIcon(QObject *parent):QObject(parent)
     trayIcon->show();
 
     connect(trayIcon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(trayIconClicked(QSystemTrayIcon::ActivationReason)));
-
 }
 
-
 void TrayIcon::trayIconClicked(QSystemTrayIcon::ActivationReason reason){
-
     switch (reason){
-
     case QSystemTrayIcon::Context:
         emit signalShowMenu(trayIcon->geometry().x(),trayIcon->geometry().y());
         break;
@@ -24,9 +20,7 @@ void TrayIcon::trayIconClicked(QSystemTrayIcon::ActivationReason reason){
         break;
     default:
         break;
-
     }
-
 }
 
 void TrayIcon::closeApp()

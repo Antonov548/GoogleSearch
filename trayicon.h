@@ -8,13 +8,11 @@
 class TrayIcon : public QObject
 {
     Q_OBJECT
-
 public:
     explicit TrayIcon(QObject *parent = nullptr);
 
 private:
     QSystemTrayIcon *trayIcon;
-
 
 public slots:
     void trayIconClicked(QSystemTrayIcon::ActivationReason reason);
