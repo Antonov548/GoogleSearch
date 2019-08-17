@@ -1,0 +1,4 @@
+bin/
+lib/
+msvc_make.bat
+CMakeLists.txt.user

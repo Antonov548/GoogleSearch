@@ -298,7 +298,6 @@ Window {
                     height: parent.height
 
                     text: "HIDE"
-
                     color: "white"
 
                     verticalAlignment: Text.AlignVCenter
