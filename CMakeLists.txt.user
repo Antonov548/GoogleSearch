@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
+<<<<<<< HEAD:CMakeLists.txt.user
 <!-- Written by QtCreator 4.9.2, 2019-08-17T20:06:10. -->
+=======
+<!-- Written by QtCreator 4.7.2, 2018-11-25T18:55:14. -->
+>>>>>>> 5c7520274ae4e3f2231e1a9481b5abc27beef638:GoogleSearch.pro.user
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>

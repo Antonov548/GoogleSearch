@@ -87,6 +87,8 @@ Window {
         border.color: "#009900"
         border.width:0
 
+        radius: 4
+
         property bool enterPressed: false
 
         color: "#e6e6e6"
@@ -111,11 +113,8 @@ Window {
 
                 if(listView.currentIndex>6)
                     scrollBar.increase()
-
             }
-
         }
-
         function onUp(){
 
             if(listView.visible && listView.currentIndex != 0){
@@ -135,7 +134,6 @@ Window {
             listView.currentIndexEnter = 0
             listView.closeListView()
             googleApi.openUrl(textField.text)
-
         }
 
         ParallelAnimation{
@@ -177,7 +175,7 @@ Window {
             placeholderText: "Search"
             background: Rectangle{
                 id: backTextField
-
+                radius: 4
                 width: parent.width
                 height: parent.height
 
@@ -285,7 +283,6 @@ Window {
                 height: parent.height / 1.5
 
                 color: "#007acc"
-
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 anchors.verticalCenter: parent.verticalCenter
@@ -293,10 +290,8 @@ Window {
                 radius: height/8
 
                 Label{
-
                     width: parent.width
                     height: parent.height
-
                     text: "HIDE"
                     color: "white"
 
@@ -308,12 +303,9 @@ Window {
                 }
 
                 MouseArea{
-
                     width: parent.width
                     height: parent.height
-
                     onClicked: hideApplication.running = true
-
                 }
             }
         }
@@ -392,20 +384,9 @@ Window {
             stepSize: 0.1
         }
 
-
         model: ListModel{
             id: listModel
-
-            ListElement{text: "text 1"; choosed: false}
-            ListElement{text: "text 2"; choosed: false}
-            ListElement{text: "text 3"; choosed: false}
-            ListElement{text: "text 4"; choosed: false}
-            ListElement{text: "text 5"; choosed: false}
-            ListElement{text: "text 6"; choosed: false}
-
-
         }
-
 
         Connections{
             target: googleApi
