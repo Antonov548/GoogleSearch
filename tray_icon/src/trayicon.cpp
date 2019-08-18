@@ -1,6 +1,6 @@
 #include <trayicon.h>
 
-TrayIcon::TrayIcon(QString tool_tip, QString icon_file, QObject *parent):QObject(parent)
+TrayIcon::TrayIcon(QString tool_tip, QString icon_file, QObject *parent) : QObject(parent)
 {
     m_tray_icon = new QSystemTrayIcon();
     m_tray_icon->setIcon(QIcon(icon_file));
@@ -19,10 +19,13 @@ void TrayIcon::trayIconClicked(QSystemTrayIcon::ActivationReason reason)
     switch (reason)
     {
         case QSystemTrayIcon::Context:
-            emit signalShowMenu(trayIcon->geometry().x(), trayIcon->geometry().y());
+            emit triggered(m_tray_icon->geometry().x(), m_tray_icon->geometry().y());
             break;
         case QSystemTrayIcon::Trigger:
-            emit signalShow();
+            emit clicked(m_tray_icon->geometry().x(), m_tray_icon->geometry().y());
+            break;
+        case QSystemTrayIcon::DoubleClick:
+            emit doubleClicked(m_tray_icon->geometry().x(), m_tray_icon->geometry().y());
             break;
         default:
             break;

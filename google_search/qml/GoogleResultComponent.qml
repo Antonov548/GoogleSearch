@@ -26,7 +26,7 @@ Component{
         ParallelAnimation {
 
             id: chooseRectApiGoogle
-            running: model.choosed
+            running: model.index === listView.currentIndex
             NumberAnimation {
                 target: rectApiGoogle
                 property: "opacity"
@@ -45,7 +45,7 @@ Component{
         }
         ParallelAnimation {
             id: unchooseRectApiGoogle
-            running: !model.choosed
+            running: model.index !== listView.currentIndex
             NumberAnimation {
                 target: rectApiGoogle
 
@@ -79,7 +79,7 @@ Component{
             anchors.left: parent.left
             anchors.leftMargin: 10
 
-            text: model.text
+            text: model.display
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
 

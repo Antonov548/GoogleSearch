@@ -7,7 +7,7 @@ Window{
     id: trayMenu
     visible: false
 
-    flags: "FramelessWindowHint|WindowStaysOnTopHint"
+    flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
 
     width: Screen.width/25
     height: btnCloseApplication.height
@@ -19,7 +19,7 @@ Window{
     Connections{
 
         target: trayIcon
-        onSignalShowMenu: showTrayMenu(_x,_y)
+        onTriggered: showTrayMenu(x, y)
 
         function showTrayMenu(_x,_y){
 
@@ -43,11 +43,7 @@ Window{
         }
     }
 
-    onActiveChanged: activeChange()
-
-    //function trayMenu
-
-    function activeChange(){
+    onActiveChanged: {
         if(!trayMenu.active){
             trayMenu.visible = false
         }
@@ -85,7 +81,7 @@ Window{
             onClicked: closeApplication()
 
             function closeApplication(){
-                trayIcon.closeApp()
+                trayIcon.hide()
                 Qt.quit()
             }
         }

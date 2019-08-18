@@ -20,6 +20,11 @@ public slots:
     void show();
     void hide();
 
+signals:
+    void clicked(int x, int y);
+    void doubleClicked(int x, int y);
+    void triggered(int x, int y);
+
 private:
     QSystemTrayIcon* m_tray_icon;
 };

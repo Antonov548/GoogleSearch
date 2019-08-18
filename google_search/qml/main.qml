@@ -2,12 +2,13 @@ import QtQuick 2.11
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.4
 import QtGraphicalEffects 1.0
+import GModel 1.0
 
 Window {
 
     id: appWindow
 
-    visible: false
+    visible: true
 
     width: 300
     height: 40
@@ -16,23 +17,14 @@ Window {
     y: Screen.height/2
 
 
-    flags: "Window | FramelessWindowHint | WindowStaysOnTopHint"
+    flags: Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
 
     color: "transparent"
 
     Connections{
-
-        target: trayIcon
-
-        onSignalShow: showApplication()
-
-        function showApplication(){
-
-            if(!appWindow.visible){
-                appWindow.visible = true
-            }
-            moveDefault.running = true
-        }
+            target: trayIcon
+            onClicked: appWindow.show()
+            onDoubleClicked: moveDefault.start()
     }
 
     SequentialAnimation{
@@ -103,37 +95,30 @@ Window {
 
         function onDown(){
 
-            if(listView.visible && listView.currentIndex != listModel.count){
-
-                listView.previousIndex = listView.currentIndex
-
-                listView.currentIndex +=1
-
+            if(listView.visible && listView.currentIndex != listModel.rowCount() - 1){
+                listView.currentIndex++
                 listView.currentIndexEnter = listView.currentIndex
-
                 if(listView.currentIndex>6)
                     scrollBar.increase()
             }
         }
         function onUp(){
 
-            if(listView.visible && listView.currentIndex != 0){
-                listView.previousIndex = listView.currentIndex
-                listView.currentIndex -= 1
+            if(listView.visible && listView.currentIndex !== -1){
+                listView.currentIndex--
                 listView.currentIndexEnter = listView.currentIndex
-                if(listView.currentIndex<5)
+                if(listView.currentIndex < 5)
                     scrollBar.decrease()
             }
         }
 
         function onEnter(){
-
             rectMain.enterPressed = true
-            if(listView.currentIndexEnter!=0)
-                textField.text = listModel.get(listView.currentIndexEnter-1).text
+            if(listView.currentIndexEnter !== -1)
+                textField.text = listModel.getDataByIndex(listView.currentIndexEnter)// listModel.get(listView.currentIndexEnter-1).text
+            listView.currentIndex = -1
             listView.currentIndexEnter = 0
-            listView.closeListView()
-            googleApi.openUrl(textField.text)
+            Qt.openUrlExternally("http://www.google.com/search?q=" + textField.text)
         }
 
         ParallelAnimation{
@@ -192,7 +177,7 @@ Window {
                 textField.focus = false
                 listView.visible = false
                 appWindow.height = rectMain.height
-                listView.closeListView()
+                listView.currentIndex = -1
             }
 
             function textChanged(){
@@ -201,16 +186,16 @@ Window {
 
                     listView.visible = true
                     listView.firstOpen = true
-                    googleApi.textChanged(textField.text)
+                    googleApi.get(textField.text)
 
                 }else if(textField.length != 0){
-                    googleApi.textChanged(textField.text)
+                    googleApi.get(textField.text)
                 }
 
                 if(textField.length==0 && !moveApp.checkDoubleClicked){
                     listView.visible = false
                     appWindow.height = rectMain.height
-                    listView.closeListView()
+                    listView.currentIndex = -1
                 }
                 moveApp.checkDoubleClicked = false
                 rectMain.enterPressed = false
@@ -272,7 +257,7 @@ Window {
                 listView.visible = false
                 moveApp.checkDoubleClicked = true
                 textField.clear()
-                listView.closeListView()
+                listView.currentIndex = -1
             }
 
             Rectangle{
@@ -330,35 +315,14 @@ Window {
 
         spacing: 1
 
-        delegate: ListViewComponent{}
+        delegate: GoogleResultComponent{}
 
-        currentIndex: 0 //default currentIndex
-        property real previousIndex: 0
-        property real currentIndexEnter: 0
-
-        onCurrentIndexChanged: currIndexChanged()
+        currentIndex: -1 //default currentIndex
+        property int currentIndexEnter: 0
 
         // function current index changed
 
-        function currIndexChanged(){
-            if(listView.previousIndex!=0)
-                listModel.setProperty(listView.previousIndex-1,"choosed",false)
-
-            if(listView.currentIndex!=0)
-                listModel.setProperty(listView.currentIndex-1,"choosed",true)
-
-        }
-
-        function closeListView(){
-            if(listView.currentIndex != 0)
-                listModel.setProperty(listView.currentIndex-1,"choosed",false)
-
-            listView.currentIndex = 0
-            listView.previousIndex = 0
-
-        }
-
-        function changeHeight(count_elements,max_size){
+        function changeHeight(count_elements, max_size){
             if(count_elements === 0){
                 listView.height = 0
                 appWindow.height = rectMain.height
@@ -384,27 +348,18 @@ Window {
             stepSize: 0.1
         }
 
-        model: ListModel{
+        model: GoogleModel{
             id: listModel
+            api: googleApi
         }
 
         Connections{
             target: googleApi
-            onCreateListView : openListView(list)
-            onOpenApplication: appWindow.visible = true
-
-
-            function openListView(list){
-                if(list.length === 0){
-                    listView.closeListView()
+            onHandleResponse : {
+                if(listModel.rowCount() === 0){
+                    listView.currentIndex = -1
                 }
-                else{
-                    listModel.clear()
-                    for(var i = 0; i < list.length; i++){
-                        listModel.append({"text": list[i], "choosed":false})
-                    }
-                }
-                listView.changeHeight(list.length,6)
+                listView.changeHeight(listModel.rowCount(), 6)
             }
         }
     }
